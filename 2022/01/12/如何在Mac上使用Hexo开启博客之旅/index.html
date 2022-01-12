@@ -260,8 +260,50 @@
 <p>清理：<code>hexo clean</code></p>
 <p>启动：<code>hexo g</code></p>
 <p>生成：<code>hexo s</code></p>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="https://raw.githubusercontent.com/AllenZhuer/image-hosting/master/images/hexo-s.3j4892swnoe0.webp"
+                      alt="hexo-s"
+                ></p>
+<p>再次进入<a class="link"   target="_blank" rel="noopener" href="http://localhost:4000/" >http://localhost:4000<i class="fas fa-external-link-alt"></i></a>，便可查看你写好的博客了</p>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="https://raw.githubusercontent.com/AllenZhuer/image-hosting/master/images/blog.70psm0hpv200.webp"
+                      alt="blog"
+                ></p>
 </li>
-<li></li>
+</ol>
+<p>到这里搭建博客就已经成功了，接下来是将博客部署到Github上</p>
+<h1 id="Hexo-Github"><a href="#Hexo-Github" class="headerlink" title="Hexo + Github"></a>Hexo + Github</h1><ol>
+<li>**登录github：<a class="link"   target="_blank" rel="noopener" href="https://github.com/" >https://github.com<i class="fas fa-external-link-alt"></i></a>，没账号的新建一个，新创建一个仓库New repository，仓库名必须为：<code>昵称.github.io</code>:**，输入描述，创建：</li>
+</ol>
+<img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="https://raw.githubusercontent.com/AllenZhuer/image-hosting/master/images/github.5adlppym0i00.webp"
+                      alt="github" style="zoom:50%;" 
+                >
+
+<p>​                在这里因为我已经创建过了，所以会显示已经存在账户。</p>
+<ol start="2">
+<li><p>接着回答terminal中，crtl + c 结束之前的运行，依旧在blog文件夹下部署github的插件：<code>npm install hexo-deployer-git --save</code></p>
+</li>
+<li><p>接着更改blog文件夹下面**_config.yml**的配置，如下</p>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="https://raw.githubusercontent.com/AllenZhuer/image-hosting/master/images/blog2.65i7zq6f44c0.webp"
+                      alt="blog2"
+                ></p>
+</li>
+</ol>
+<p>​        可以从这里复制：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">deploy:</span><br><span class="line">  type: git</span><br><span class="line">  repo: https://github.com/AllenZhuer/AllenZhuer.github.io.git</span><br><span class="line">  branch: master</span><br></pre></td></tr></table></figure>
+
+<ol start="4">
+<li>最后回到terminal，使用 <code>hexo d</code> 将博客部署到远端。中间会让输入github密码，输入即可，后续部署完成，即可访问你的远端地址。例子就是这样的</li>
 </ol>
 
         </div>
@@ -398,7 +440,7 @@
         <aside class="page-aside">
             <div class="post-toc-wrap">
     <div class="post-toc">
-        <ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E4%BB%80%E4%B9%88%E6%98%AFHexo%E5%91%A2%EF%BC%9F"><span class="nav-number">1.</span> <span class="nav-text">什么是Hexo呢？</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%A6%82%E4%BD%95%E9%85%8D%E7%BD%AE%E7%8E%AF%E5%A2%83"><span class="nav-number">2.</span> <span class="nav-text">如何配置环境</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%A6%82%E4%BD%95%E6%90%AD%E5%BB%BA%E5%8D%9A%E5%AE%A2"><span class="nav-number">3.</span> <span class="nav-text">如何搭建博客</span></a></li></ol>
+        <ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E4%BB%80%E4%B9%88%E6%98%AFHexo%E5%91%A2%EF%BC%9F"><span class="nav-number">1.</span> <span class="nav-text">什么是Hexo呢？</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%A6%82%E4%BD%95%E9%85%8D%E7%BD%AE%E7%8E%AF%E5%A2%83"><span class="nav-number">2.</span> <span class="nav-text">如何配置环境</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%A6%82%E4%BD%95%E6%90%AD%E5%BB%BA%E5%8D%9A%E5%AE%A2"><span class="nav-number">3.</span> <span class="nav-text">如何搭建博客</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Hexo-Github"><span class="nav-number">4.</span> <span class="nav-text">Hexo + Github</span></a></li></ol>
     </div>
 </div>
         </aside>
