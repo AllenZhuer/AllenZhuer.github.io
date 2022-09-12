@@ -6,7 +6,7 @@
   <link href="http://example.com/atom.xml" rel="self"/>
   
   <link href="http://example.com/"/>
-  <updated>2022-09-12T00:43:13.939Z</updated>
+  <updated>2022-09-12T02:54:50.390Z</updated>
   <id>http://example.com/</id>
   
   <author>
@@ -15,6 +15,30 @@
   </author>
   
   <generator uri="https://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>THE LEAN PRODUCT PROCESS</title>
+    <link href="http://example.com/2022/09/12/THE-LEAN-PRODUCT-PROCESS/"/>
+    <id>http://example.com/2022/09/12/THE-LEAN-PRODUCT-PROCESS/</id>
+    <published>2022-09-12T01:01:08.000Z</published>
+    <updated>2022-09-12T02:54:50.390Z</updated>
+    
+    <content type="html"><![CDATA[<h1 id="THE-LEAN-PRODUCT-PROCESS"><a href="#THE-LEAN-PRODUCT-PROCESS" class="headerlink" title="THE LEAN PRODUCT PROCESS"></a>THE LEAN PRODUCT PROCESS</h1><p><em>The Lean Product Playbook</em> written by Dan Olsen shows a detailed guide on how to find product markets and make products people love. Unlike some books that are long in theory and short in practice, this is the first book I’ve read that really explains how to apply Lean Startup concepts in a practical, step-by-step manner. I’m so glad to have the book when I have the passion to build something inspired. </p><p>And this note is more about listing some topics I really love in this book.</p><h1 id="Core-concepts"><a href="#Core-concepts" class="headerlink" title="Core concepts"></a>Core concepts</h1><p>The journey starts with why products failed and followed by the <em><strong>product-market fit</strong></em>, which captures the essence of what it means to build a great product. </p><blockquote><p>Product-market fit:</p><p>My definition of product-market fit…is that you have to build a product that creates significant customer value. This means that your product meets real customer needs and does so in a way that is better than the alternatives.</p></blockquote><p>I used to pay more attention to some ideas or concepts like advertisement, marketing, business models, and how to increase the customer lifetime value, and this definition tells me there is a distinction between <em>creating</em> and <em>capturing</em> values in the process. In order to capture values, you have to create it first.</p><p>The other core concept in this book is the <em><strong>Problem Space and Solution Space</strong></em>. </p><blockquote><p>Any product that you actually build exists in solution space, as do any product designs that you create—such as mockups, wireframes, or prototypes.</p><p>Problem space is where all the customer needs that you’d like your product to deliver live.</p></blockquote><p>And the customer needs can be expanded to some other concepts like job-to-be-done, customer desires, or customer pain points. I attained many courses who starts with idetifying the job-to-be-done, which emphasizes the importace of finding what not be done or well to solve customers real problems. And sometimes I find that some blogs or books often talk about the differences between the “what” versus the “how.” The “what” describes the benefits that the product should give the customer—what the product will accomplish for the user. The “how” is the way in which the product delivers the “what” to the customer. The “how” is the design of the product and the specific technology used to implement the product. “What” is problem space and “how” is solution space.</p><h1 id="The-Lean-product-process"><a href="#The-Lean-product-process" class="headerlink" title="The Lean product process"></a>The Lean product process</h1><p>The content of product management process can be divided into these steps:</p><ul><li><p><strong>Determine your target customers.</strong> This is the bottom of our pyramid since different customers will have different needs and even those who have the same needs may have different views on their relative importance. </p></li><li><p><strong>Identify underserved customer needs.</strong> Before we mover to design a solution, we have to validate the job-to-be-done, customer pain points or customer desires. Since customer needs can seem somewhat fuzzy when we interview them, and they are not skilled at describe the roots of the problem.</p></li><li><p><strong>Define your value proposition.</strong> At this point, we have identified several important customer needs, now we need to decide which ones our product or service will address. </p></li><li><p><strong>Specify your MVP feature set.</strong> Now we have a clear understanding of our value proposition, we have decided on the feature set for our MVP, identifying functionality required to validating we are heading on the right direction.</p></li><li><p><strong>Create your MVP prototype.</strong> At this stage, we want to create a user experience or prototype that we can show to customers so that we can test our ideas.</p></li><li><p><strong>Test your MVP with customers.</strong> In this part, we conduct both qualitative and quotative user test to see how it compares to the target value. </p></li><li><p><strong>Then Iterate to improve product-market fit.</strong> I learned a loop called ‘build-measure-learn’, which means we want to use what we have learned after we receive a round of feedbacks to modify our hypotheses and MVP so that we can test them with customers again. We want to iterate quickly with the goal of improving product-market fit.</p></li></ul><p>Some tasks will be performed in these steps:</p><ul><li><p>Understanding and representing user needs.</p></li><li><p>Defining a vision for a product.</p></li><li><p>Monitoring the market and developing competitive analyses.</p></li><li><p>Aligning stakeholders around the vision for the product.</p></li><li><p>Prioritizing product features and capabilities.</p></li><li><p>Creating a shared brain across larger teams to empower independent decision-making.</p></li></ul><p>There are some benefits of Lean or agile management. First, because we are planning in smaller increments, we can react to changes in the market or new information more quickly. Second, our product can reach customers earlier, which means that we can start hearing feedbacks from customers on our actual products sooner, which helps guide our subsequent product management efforts. Third, teams can reduce their margin of error in estimating scope by working in smaller batch sizes.</p><p><em>TBC… Some concepts in Agile will be added, and some tools will be here in the future after I have the experience of the whole loop. Some other ideas can be the link and differences between design thinking and the lean product process. From a lifelong learning perspective, how to be a good problem-solver?</em></p>]]></content>
+    
+    
+      
+      
+    <summary type="html">&lt;h1 id=&quot;THE-LEAN-PRODUCT-PROCESS&quot;&gt;&lt;a href=&quot;#THE-LEAN-PRODUCT-PROCESS&quot; class=&quot;headerlink&quot; title=&quot;THE LEAN PRODUCT PROCESS&quot;&gt;&lt;/a&gt;THE LEAN PRODU</summary>
+      
+    
+    
+    
+    
+    <category term="PM" scheme="http://example.com/tags/PM/"/>
+    
+    <category term="Notes" scheme="http://example.com/tags/Notes/"/>
+    
+  </entry>
   
   <entry>
     <title>How to solve problems?</title>
