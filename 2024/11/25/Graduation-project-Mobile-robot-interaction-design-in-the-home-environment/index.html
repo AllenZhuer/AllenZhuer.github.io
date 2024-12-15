@@ -309,6 +309,12 @@
 <li><strong>Frameworks</strong>: ROS for Turtlebot development, CUDA 9.0, and TensorFlow 1.7 for model training.</li>
 </ul>
 <h4 id="Final-Deployment"><a href="#Final-Deployment" class="headerlink" title="Final Deployment"></a><strong>Final Deployment</strong></h4><p>The fully developed system was successfully implemented on the MORO dual-arm robot, seamlessly integrating navigation, facial recognition, and robotic control. Since the MORO platform was still at the very beginning stage then, the grasp tasks were replaced by pointing to the drinks, and the KUKA LBR IIWA robot arm and RGBD camera realized the grasp tasks. </p>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="https://allenzhuer.github.io/picx-images-hosting/image.8ojr4t0mou.webp"
+                      alt="MORO II robot"
+                ></p>
 <h2 id="Visitor-identification"><a href="#Visitor-identification" class="headerlink" title="Visitor identification"></a>Visitor identification</h2><p>The visitor identification task module primarily uses an <strong>RGB-D camera</strong> to actively capture images for face detection and recognition. The goal is to identify whether a detected face is new or already stored in the system database and transition seamlessly to the inquiry task once a face is recognized.</p>
 <h4 id="Process-Flow"><a href="#Process-Flow" class="headerlink" title="Process Flow"></a><strong>Process Flow</strong></h4><ol>
 <li><p><strong>Initialization</strong>:</p>
@@ -428,6 +434,133 @@
                      data-src="https://allenzhuer.github.io/picx-images-hosting/image.3yei67cre4.webp"
                       alt="image"
                 ></p>
+<h1 id="Result"><a href="#Result" class="headerlink" title="Result"></a>Result</h1><h2 id="Face-Recognition"><a href="#Face-Recognition" class="headerlink" title="Face Recognition"></a>Face Recognition</h2><p><strong>Face Recognition with LFW Dataset and MTCNN</strong></p>
+<ol>
+<li><p><strong>MTCNN Training on LFW Dataset</strong></p>
+<ul>
+<li>The LFW dataset was used to train MTCNN for face detection.</li>
+<li>The dataset was divided into 80% for training and 20% for testing and validation, along with a custom-built face dataset.</li>
+<li>The final detection accuracy was 96.4%.</li>
+</ul>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="https://allenzhuer.github.io/picx-images-hosting/image.5fkn84dj1a.webp"
+                      alt="MTCNN Examples"
+                ></p>
+</li>
+<li><p><strong>FaceNet Training with Processed Images</strong></p>
+<ul>
+<li>All images in the LFW dataset were resized to 160×160 pixels using MTCNN preprocessing.</li>
+<li>The processed images were then fed into the FaceNet model for training.</li>
+<li>The trained FaceNet model achieved a recognition accuracy of 98.5%.</li>
+</ul>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="https://allenzhuer.github.io/picx-images-hosting/image.9rjgfnx42u.webp"
+                      alt="FaceNet examples"
+                ></p>
+</li>
+<li><p><strong>Challenges in Recognition Accuracy</strong></p>
+<ul>
+<li>Misrecognitions occurred in two primary scenarios:<br>a. When an image contained two or more faces, the target face might not be selected.<br>b. Poor lighting, occlusions, or unfavorable angles reduced the confidence score of the target face compared to others.</li>
+</ul>
+</li>
+<li><p><strong>Example of MTCNN Misrecognition</strong></p>
+<ul>
+<li>In one example, the male face had a confidence score of 0.78, while the female face had a score of 0.85.</li>
+<li>The target was the male face, but due to occlusion, MTCNN detected and cropped the female face instead.</li>
+<li>As a result, the male face was excluded.</li>
+</ul>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="https://allenzhuer.github.io/picx-images-hosting/image.5tr2yznm48.webp"
+                      alt="MTCNN Misrecognition example"
+                ></p>
+</li>
+</ol>
+<p><strong>Conclusion:</strong><br>MTCNN and FaceNet demonstrate high accuracy for face detection and recognition. However, challenges like multiple faces, occlusions, and lighting variations can lead to misrecognitions, indicating areas for further improvement.</p>
+<h2 id="Voice-Greating-Function"><a href="#Voice-Greating-Function" class="headerlink" title="Voice Greating Function"></a>Voice Greating Function</h2><p><strong>Inquiry Module</strong></p>
+<p>The inquiry module primarily utilizes the <strong>iFlytek speech-to-text API</strong>. This API allows for the transcription of a local <code>.wav</code> audio file into text. For example, a local file named <code>input.wav</code> can be transcribed into text such as, <em>“我是猪八戒，我喜欢喝可乐”</em> (translated: “I am Zhu Bajie, and I like drinking cola”). An example of this process is shown in the following Figures.</p>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="https://allenzhuer.github.io/picx-images-hosting/image.6wqs9vobth.webp"
+                      alt="image"
+                ></p>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="https://allenzhuer.github.io/picx-images-hosting/image.1ovhmvvw4a.webp"
+                      alt="image"
+                ></p>
+<p>The two images above illustrate the process of recording audio for family members and saving it locally as the <code>input.wav</code> audio file. The workflow is as follows:</p>
+<ol>
+<li><strong>Audio Recording</strong>: Family members’ voices are recorded and saved as a <code>.wav</code> file (e.g., <code>input.wav</code>).</li>
+<li><strong>Speech Transcription</strong>: The audio file is transcribed into text using the iFlytek API.</li>
+<li><strong>Keyword Extraction</strong>: Keywords, such as names and preferences, are extracted from the transcribed text and saved locally in the <code>mine.txt</code> file.</li>
+<li><strong>Image Naming</strong>: Collected facial images are linked to the corresponding names from the transcribed data and renamed accordingly.</li>
+</ol>
+<p>This integrated approach ensures that each family member’s face and preferences are organized systematically for further use.</p>
+<h2 id="The-whole-process"><a href="#The-whole-process" class="headerlink" title="The whole process"></a>The whole process</h2><p>To evaluate the overall effectiveness of integrating all components, the following images illustrate the testing process for the entire task workflow:</p>
+<ol>
+<li><p><strong>Face Detection and Recognition</strong>:<br>As shown in <strong>Figure (a)</strong>, when the target person enters the robot’s field of view, the robot captures images from the video feed via its camera. The system then performs face detection and recognition, extracting the facial information of the person and storing it in a local database. Once the facial information is obtained, the system issues a command to change the task state and transitions to the voice interaction module.</p>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="https://allenzhuer.github.io/picx-images-hosting/image.2rv6xrwxl3.webp"
+                      alt="Figure a"
+                ></p>
+</li>
+<li><p><strong>Voice Interaction</strong>:<br>In <strong>Figure (b)</strong>, the microphone prompts the target individual with a question: “Hello, what is your name?” The person responds, and the system attempts to recognize the spoken name. If the name is not accurately recognized, the system either repeats the question or confirms the name by ensuring that the same name is detected twice consecutively. If there is a mismatch, the system continues to ask until two consistent results are obtained. After obtaining the name, the system proceeds to inquire about the person’s favorite beverage. This process is similar to the name inquiry, and the results are displayed in <strong>Figure (c)</strong>.</p>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="https://allenzhuer.github.io/picx-images-hosting/image.1ap1w0tddq.webp"
+                      alt="Figure b"
+                ></p>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="https://allenzhuer.github.io/picx-images-hosting/image.1ap1w0tddq.webp"
+                      alt="Figure c"
+                ></p>
+</li>
+<li><p><strong>Saving Information to the Database</strong>:<br>Once all information is collected, the system saves it in the database. As shown in <strong>Figure (f)</strong>, the database includes details such as the member’s ID, name, age, preferences, and facial data. The collected facial images are named according to the person’s name and saved locally.</p>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="https://allenzhuer.github.io/picx-images-hosting/image.2yyet7ldqq.webp"
+                      alt="Figre f"
+                ></p>
+</li>
+<li><p><strong>Proposing Personalized Tasks</strong>:<br>After completing the inquiries, the robot addresses the person by their name and makes a proposal, such as: “Wang Dapeng, would you like a cup of milk tea?” This question is formatted as: “Target name, would you like a cup of [favorite beverage]?” An example of this interaction is shown in <strong>Figure (d)</strong></p>
+</li>
+</ol>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="https://allenzhuer.github.io/picx-images-hosting/image.73u05bhlfx.webp"
+                      alt="Figure d"
+                ></p>
+<ol start="5">
+<li><p><strong>Re-encountering a Recognized Member</strong>:<br>When a previously recognized member reappears in the robot’s field of view, such as after registering “Wang Dapeng” and later encountering another person “Liu Tao,” the system logs their information as new. However, when “Wang Dapeng” appears again, the system recognizes them as an existing member and generates an “old” message to indicate prior recognition. The system then repeats the personalized interaction, as it did during the first encounter, by asking: “Wang Dapeng, would you like a cup of milk tea?” The result of this process is shown in <strong>Figure (e)</strong>.</p>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="https://allenzhuer.github.io/picx-images-hosting/image.67xipv8ldf.webp"
+                      alt="Figure e"
+                ></p>
+</li>
+</ol>
+<h1 id="Improvements"><a href="#Improvements" class="headerlink" title="Improvements"></a>Improvements</h1><p>As described above, this paper presents the design of a simple home service robot system that performs several tasks. However, there are still many limitations for home service robots, which can be summarized as follows:</p>
+<ol>
+<li><strong>Communication Delays</strong>:<br>The communication delay between the face recognition and voice recognition modules is relatively long. In the future, the adoption of <strong>5G transmission</strong> could significantly improve the speed of data transfer, especially when dealing with large datasets.</li>
+<li><strong>Misidentification in Multi-Face Scenarios</strong>:<br>When multiple faces appear in the robot’s field of view, the system may misidentify the target face. Future improvements in algorithms, such as the adoption of <strong>3D face recognition</strong>, could greatly enhance the accuracy of identification.</li>
+<li><strong>Limited System Functionality</strong>:<br>The system designed in this study is relatively simple and performs only basic, single-purpose tasks. It is not yet suitable for complex home environments. In the future, home service robots will likely become <strong>smarter and more versatile</strong>, capable of completing a wide range of tasks quickly and efficiently.</li>
+</ol>
 
         </div>
 
@@ -578,7 +711,7 @@
         <aside class="page-aside">
             <div class="post-toc-wrap">
     <div class="post-toc">
-        <ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#Introduction"><span class="nav-number">1.</span> <span class="nav-text">Introduction</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Core-Functions"><span class="nav-number">2.</span> <span class="nav-text">Core Functions</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#Scenario-Welcoming-Friends-at-Home-with-the-Robot-Assistant"><span class="nav-number">2.1.</span> <span class="nav-text">Scenario: Welcoming Friends at Home with the Robot Assistant</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Step-1-Greeting-the-Guests"><span class="nav-number">2.1.1.</span> <span class="nav-text">Step 1:  Greeting the Guests</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Step-2-Guiding-the-Guests-to-the-Living-Room"><span class="nav-number">2.1.2.</span> <span class="nav-text">Step 2: Guiding the Guests to the Living Room</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Step-3-Personalized-Drink-Delivery"><span class="nav-number">2.1.3.</span> <span class="nav-text">Step 3: Personalized Drink Delivery</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Step-4-Creating-a-Relaxed-Atmosphere"><span class="nav-number">2.1.4.</span> <span class="nav-text">Step 4: Creating a Relaxed Atmosphere</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Product-Function-and-Modules"><span class="nav-number">2.2.</span> <span class="nav-text">Product Function and Modules</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#Additional-Potential-Enhancements"><span class="nav-number">2.2.0.1.</span> <span class="nav-text">Additional Potential Enhancements:</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Table-1-Functions-and-Modules"><span class="nav-number">2.2.1.</span> <span class="nav-text">Table 1:  Functions and Modules</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Design-and-Methodology"><span class="nav-number">3.</span> <span class="nav-text">Design and Methodology</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#System-Overview"><span class="nav-number">3.1.</span> <span class="nav-text">System Overview</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#Development-Environment"><span class="nav-number">3.1.0.1.</span> <span class="nav-text">Development Environment</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Final-Deployment"><span class="nav-number">3.1.0.2.</span> <span class="nav-text">Final Deployment</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Visitor-identification"><span class="nav-number">3.2.</span> <span class="nav-text">Visitor identification</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#Process-Flow"><span class="nav-number">3.2.0.1.</span> <span class="nav-text">Process Flow</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Voice-based-greeting-function"><span class="nav-number">3.3.</span> <span class="nav-text">Voice-based greeting function</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Guidance-function"><span class="nav-number">3.4.</span> <span class="nav-text">Guidance function</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#Process-flow"><span class="nav-number">3.4.0.1.</span> <span class="nav-text">Process flow</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Grasp-Function"><span class="nav-number">3.5.</span> <span class="nav-text">Grasp Function</span></a></li></ol></li></ol>
+        <ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#Introduction"><span class="nav-number">1.</span> <span class="nav-text">Introduction</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Core-Functions"><span class="nav-number">2.</span> <span class="nav-text">Core Functions</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#Scenario-Welcoming-Friends-at-Home-with-the-Robot-Assistant"><span class="nav-number">2.1.</span> <span class="nav-text">Scenario: Welcoming Friends at Home with the Robot Assistant</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Step-1-Greeting-the-Guests"><span class="nav-number">2.1.1.</span> <span class="nav-text">Step 1:  Greeting the Guests</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Step-2-Guiding-the-Guests-to-the-Living-Room"><span class="nav-number">2.1.2.</span> <span class="nav-text">Step 2: Guiding the Guests to the Living Room</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Step-3-Personalized-Drink-Delivery"><span class="nav-number">2.1.3.</span> <span class="nav-text">Step 3: Personalized Drink Delivery</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Step-4-Creating-a-Relaxed-Atmosphere"><span class="nav-number">2.1.4.</span> <span class="nav-text">Step 4: Creating a Relaxed Atmosphere</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Product-Function-and-Modules"><span class="nav-number">2.2.</span> <span class="nav-text">Product Function and Modules</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#Additional-Potential-Enhancements"><span class="nav-number">2.2.0.1.</span> <span class="nav-text">Additional Potential Enhancements:</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Table-1-Functions-and-Modules"><span class="nav-number">2.2.1.</span> <span class="nav-text">Table 1:  Functions and Modules</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Design-and-Methodology"><span class="nav-number">3.</span> <span class="nav-text">Design and Methodology</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#System-Overview"><span class="nav-number">3.1.</span> <span class="nav-text">System Overview</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#Development-Environment"><span class="nav-number">3.1.0.1.</span> <span class="nav-text">Development Environment</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Final-Deployment"><span class="nav-number">3.1.0.2.</span> <span class="nav-text">Final Deployment</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Visitor-identification"><span class="nav-number">3.2.</span> <span class="nav-text">Visitor identification</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#Process-Flow"><span class="nav-number">3.2.0.1.</span> <span class="nav-text">Process Flow</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Voice-based-greeting-function"><span class="nav-number">3.3.</span> <span class="nav-text">Voice-based greeting function</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Guidance-function"><span class="nav-number">3.4.</span> <span class="nav-text">Guidance function</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#Process-flow"><span class="nav-number">3.4.0.1.</span> <span class="nav-text">Process flow</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Grasp-Function"><span class="nav-number">3.5.</span> <span class="nav-text">Grasp Function</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Result"><span class="nav-number">4.</span> <span class="nav-text">Result</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#Face-Recognition"><span class="nav-number">4.1.</span> <span class="nav-text">Face Recognition</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Voice-Greating-Function"><span class="nav-number">4.2.</span> <span class="nav-text">Voice Greating Function</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#The-whole-process"><span class="nav-number">4.3.</span> <span class="nav-text">The whole process</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Improvements"><span class="nav-number">5.</span> <span class="nav-text">Improvements</span></a></li></ol>
     </div>
 </div>
         </aside>
