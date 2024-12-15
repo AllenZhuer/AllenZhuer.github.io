@@ -216,12 +216,313 @@
         
 
         <div class="article-content markdown-body">
-            <h1 id="Face-Recognition"><a href="#Face-Recognition" class="headerlink" title="Face Recognition"></a>Face Recognition</h1><p>Face Recognition was part of the Human-Robot Interaction and my graduation project, which is to build a reception robot. In a home environment, smart home robots must accurately detect and identify all family members to perform tasks specific to individual household members. Therefore, this chapter focuses on implementing facial recognition and analyzing related aspects.</p>
-<p>Facial recognition tasks can be broadly divided into two parts: <strong>face detection</strong> and <strong>face recognition</strong>. Face detection refers to locating all faces in an input image and processing them, such as aligning the faces, generating bounding boxes, and resizing or cropping the detected faces. However, due to the potential challenges posed by the robot’s field of vision, such as incomplete or peripheral facial appearances, face detection can become more complex. Additional complications arise from variations in lighting, occlusions, differences in the same individual’s pose or expressions, and inter-individual appearance differences.</p>
+            <h1 id="Face-Recognition"><a href="#Face-Recognition" class="headerlink" title="Face Recognition"></a>Face Recognition</h1><p>Face Recognition was part of the Human-Robot Interaction and my graduation project, which is to build a reception robot. In a home environment, smart home robots must accurately detect and identify all family members to perform tasks specific to individual household members. Therefore, this blog focuses on implementing facial recognition and analyzing related aspects.</p>
+<p>Face recognition tasks can be broadly divided into two parts: <strong>face detection</strong> and <strong>face recognition</strong>. Face detection refers to locating all faces in an input image and processing them, such as aligning the faces, generating bounding boxes, and resizing or cropping the detected faces. However, due to the potential challenges posed by the robot’s field of vision, such as incomplete or peripheral facial appearances, face detection can become more complex. Additional complications arise from variations in lighting, occlusions, differences in the same individual’s pose or expressions, and inter-individual appearance differences.</p>
 <p>To address these challenges, accurate facial recognition in complex environments requires precise localization of faces, followed by the detection of facial feature points, such as facial contours, eye outlines, nose, and mouth contours. These feature points are then used to align the faces uniformly, eliminating errors caused by position or pose variations.</p>
 <p><strong>Face recognition</strong> can be described as comparing a given photo to a dataset, calculating the facial similarity, and outputting a similarity score or confidence level. Alternatively, it involves identifying which individual in the dataset the photo belongs to and retrieving the relevant information about the individual from the database.</p>
-<p>A representative algorithm in this domain is <strong>FaceNet</strong>, which won the 2014 ILSVRC (ImageNet Large Scale Visual Recognition Challenge) and reduced the Top-5 error rate for facial recognition to 6.67%. FaceNet uses the GoogLeNet network architecture, as outlined in the associated paper [21]. Following this milestone, facial recognition algorithms have continued to evolve. The latest implementation on GitHub recommends using the <strong>MTCNN</strong> (Multi-task Cascaded Convolutional Networks) algorithm [22], which improves detection accuracy to 99.65%.</p>
-<p>Therefore, the primary focus of this chapter is the introduction and implementation of the MTCNN and FaceNet network architectures.</p>
+<p>A representative algorithm in this domain is <strong>FaceNet</strong>, which won the 2014 ILSVRC (ImageNet Large Scale Visual Recognition Challenge) and reduced the Top-5 error rate for facial recognition to 6.67%. FaceNet uses the GoogLeNet network architecture, as outlined in the associated paper. Following this milestone, facial recognition algorithms have continued to evolve. The latest implementation on GitHub recommends using the <strong>MTCNN</strong> (Multi-task Cascaded Convolutional Networks) algorithm, which improves detection accuracy to 99.65%.</p>
+<p>Therefore, the primary focus of this blog is the introduction and implementation of the MTCNN and FaceNet network architectures.</p>
+<h1 id="Face-Detection-MTCNN"><a href="#Face-Detection-MTCNN" class="headerlink" title="Face Detection MTCNN"></a>Face Detection MTCNN</h1><h2 id="Why-MTCNN-rather-than-OpenCV"><a href="#Why-MTCNN-rather-than-OpenCV" class="headerlink" title="Why MTCNN rather than OpenCV?"></a>Why MTCNN rather than OpenCV?</h2><p>There are several methods for face detection, such as the Haar feature-based classifier provided by OpenCV and the face detection method in dlib. For OpenCV’s face detection method, its advantages lie in being simple and fast; however, its drawbacks include poor detection performance. It works well for frontal, upright faces in good lighting conditions, but fails to detect faces that are turned sideways, tilted, or poorly lit. Therefore, this method is not suitable for real-world applications. In comparison, dlib’s face detection method provides better performance than OpenCV’s, but its detection capability still does not meet the standards required for real-world applications.</p>
+<p>In this study, we use the MTCNN-based deep learning approach for face detection (MTCNN: Joint Face Detection and Alignment using Multi-task Cascaded Convolutional Neural Networks). The MTCNN face detection method is more robust to variations in lighting, angles, and facial expressions in natural environments, offering better face detection results. Additionally, it has a relatively low memory consumption, enabling real-time face detection. The MTCNN method used in this blog is implemented in Python and TensorFlow.</p>
+<h2 id="How-MTCNN-works"><a href="#How-MTCNN-works" class="headerlink" title="How MTCNN works?"></a>How MTCNN works?</h2><p>Face detection is a critical step in the face recognition process, and the performance of this step significantly impacts the video processing speed and accuracy of face recognition in a robotic system. The method adopted in this paper, <strong>MTCNN</strong>, integrates both face detection and face alignment to assist in the detection of facial key points. The core of the algorithm involves using three multi-stage deep convolutional neural networks to form a face detection network framework through a cascaded structure.</p>
+<p>Figure 1 illustrates the flowchart of the MTCNN face detection process. Initially, candidate boxes are generated by the <strong>P-Net</strong> (Proposal Network). P-Net performs the first-level analysis of the image and outputs candidate objects. In the next phase, the <strong>R-Net</strong> (Refinement Network) further analyzes and refines these candidate objects. In the final stage, the <strong>O-Net</strong> (Output Network) generates the final bounding boxes and the locations of facial key points.</p>
+<p>Thus, the MTCNN architecture can be understood as a cascaded structure involving an image pyramid and the networks P-Net, R-Net, and O-Net, which together contribute to the accurate detection and alignment of faces.</p>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="https://allenzhuer.github.io/picx-images-hosting/image.1ovhlgrglp.webp"
+                      alt="Figure 1: MTCNN face detection process framework"
+                ></p>
+<p>The MTCNN model consists of three processing stages, which ultimately produce results for both face detection and face alignment. Before using the three cascaded networks, the input image is first processed through an image pyramid, which scales the image at different resolutions. This approach is necessary because faces can appear at various sizes within an image, and scaling the image at multiple resolutions helps detect faces at different scales. This method allows for a rough initial classification of the image, removing non-face regions and identifying face-containing areas. The advantage of this approach is its ability to quickly detect faces of different sizes, enabling multi-scale target detection and recognition.</p>
+<p>Below is an introduction to the three processing stages of MTCNN face detection, illustrated by Figure 1.</p>
+<h3 id="First-Stage-P-Net"><a href="#First-Stage-P-Net" class="headerlink" title="First Stage: P-Net"></a>First Stage: P-Net</h3><p>In the first stage, <strong>P-Net</strong> generates feature maps through forward propagation, where each location is represented by a 32-dimensional feature vector used to determine whether a face is present in that region. As shown in Figure 2(a), <strong>P-Net</strong> consists of three 3x3 convolutional layers and one 3x3 max-pooling layer. Its input is a processed 12x12x3 RGB image. The network outputs two parts:</p>
+<ol>
+<li>A 32-dimensional feature vector that indicates the probability of a face being present in the region. Since a <strong>Softmax</strong> layer is used, the final output is the probability of the presence of a face in the image.</li>
+<li>If a face is detected, a bounding box indicating the face is returned, which constitutes the second part of the output.</li>
+</ol>
+<p>The bounding boxes from P-Net may not always align perfectly with the actual face positions. For example, sometimes the face may be only partially within the bounding box or outside the box. In such cases, the region is adjusted to more accurately reflect the desired area. Once the bounding box with the highest probability of containing a face is identified, <strong>Non-Maximum Suppression (NMS)</strong> is applied to retain the box with the highest score and remove other less probable boxes.</p>
+<p>The third part of P-Net’s output is the coordinates of five key facial points: the positions of the left eye, right eye, nose, left corner of the mouth, and right corner of the mouth. Although P-Net provides the key point coordinates, there may still be many false positive face boxes, so the focus at this stage is on selecting the correct face box.</p>
+<h3 id="Second-Stage-R-Net"><a href="#Second-Stage-R-Net" class="headerlink" title="Second Stage: R-Net"></a>Second Stage: R-Net</h3><p>As shown in Figure 2(b), <strong>R-Net</strong> consists of two 3x3 convolutional layers, one 2x2 convolutional layer, two 3x3 max-pooling layers, and a 128-dimensional fully connected layer. Since the candidate boxes generated by P-Net are still rough, <strong>R-Net</strong> is used to further optimize the results. Before inputting the data, the face bounding box coordinates from P-Net undergo a transformation to map the image size to 24x24x3.</p>
+<p>The output of <strong>R-Net</strong> is similar to that of P-Net, but its main purpose is to refine the results by removing irrelevant face boxes—non-face boxes or partially incorrect face boxes—and passing the refined results to the third stage (O-Net) for final selection.</p>
+<h3 id="Third-Stage-O-Net"><a href="#Third-Stage-O-Net" class="headerlink" title="Third Stage: O-Net"></a>Third Stage: O-Net</h3><p>In Figure 2(c), <strong>O-Net</strong> consists of three 3x3 convolutional layers, one 2x2 convolutional layer, two 3x3 and one 2x2 max-pooling layers, and a 256-dimensional fully connected layer. The input to <strong>O-Net</strong> is the output from <strong>R-Net</strong>, scaled to an image size of 48x48x3. The output of <strong>O-Net</strong> includes:</p>
+<ul>
+<li>The coordinates of the final bounding box</li>
+<li>The confidence score</li>
+<li>The coordinates of the facial key points</li>
+</ul>
+<p>This final stage provides the precise face detection and alignment results, refining the bounding boxes and facial key points obtained from the previous stages.</p>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="https://allenzhuer.github.io/picx-images-hosting/image.8hgj7xmscv.webp"
+                      alt="Figure 2: MTCNN subnetwork framework"
+                ></p>
+<h3 id="Loss-Function"><a href="#Loss-Function" class="headerlink" title="Loss Function"></a>Loss Function</h3><p>Since MTCNN is a cascaded structure consisting of three sub-networks, each sub-network has its own loss function. In the task of distinguishing between faces and non-faces, which is a binary classification problem, the <strong>cross-entropy loss</strong> function is used. For bounding box regression and key point localization, the network predicts the offsets between the predicted values and the true values, so the <strong>Euclidean distance</strong> is used as the loss function for these tasks.</p>
+<p>Finally, the total loss function is obtained by summing the individual losses of the three sub-networks, with each loss weighted according to the goals of each stage. The training focuses of the three sub-networks vary, so different weightings are assigned to each loss function. During the training of <strong>P-Net</strong> and <strong>R-Net</strong>, the main focus is on the accuracy of the bounding boxes, so the contribution of the key point loss is relatively small. In contrast, during the training of <strong>O-Net</strong>, which emphasizes key point selection, the weight of the key point loss is larger compared to the other components.</p>
+<p>Thus, the total loss function for MTCNN is a weighted sum of three parts:</p>
+<ol>
+<li>The <strong>cross-entropy loss</strong> for face vs. non-face classification.</li>
+</ol>
+<p>Since face classification is a binary classification problem, the <strong>cross-entropy loss function</strong> is used. For each sample $x_i$, the loss function is defined as:</p>
+<p>$L_i^{\text{det}} = - \left( y_i^{\text{det}} \log(P_i) + (1 - y_i^{\text{det}})(1 - \log(P_i)) \right)$</p>
+<p>Where:</p>
+<ul>
+<li>$P_i$ represents the probability output by the network that the sample is a face.</li>
+<li>$y_i^{\text{det}} \in {0,1}$ indicates the ground truth label for whether the sample is a face (1) or not (0).</li>
+</ul>
+<ol start="2">
+<li>The <strong>Euclidean distance loss</strong> for bounding box regression.</li>
+</ol>
+<p>For each candidate bounding box, the loss function measures the offset between the predicted values and the ground truth. For each sample $x_i$, the <strong>Euclidean distance</strong> is used as the loss function, defined as:</p>
+<p>$L_i^{\text{box}} = | \hat{y}_i^{\text{box}} - y_i^{\text{box}} |_2^2$</p>
+<p>Where:</p>
+<ul>
+<li>$\hat{y}_i^{\text{box}}$ is the network’s prediction for the bounding box, which includes four values: the top-left corner coordinates, width, and height of the box.</li>
+<li>$y_i^{\text{box}}$represents the ground truth for each sample’s bounding box.</li>
+</ul>
+<ol start="3">
+<li>The <strong>Euclidean distance loss</strong> for key point localization.</li>
+</ol>
+<p>For key point localization, a loss function similar to bounding box regression is used. The <strong>Euclidean distance</strong> measures the offset between the predicted and true key point coordinates, defined as:</p>
+<p>$L_i^{\text{landmark}} = | \hat{y}_i^{\text{landmark}} - y_i^{\text{landmark}} |_2^2$</p>
+<p>Where:</p>
+<ul>
+<li>$\hat{y}_i^{\text{landmark}}$is the network’s prediction for the key points, including 10 values corresponding to the coordinates of the left eye, right eye, nose, left mouth corner, and right mouth corner.</li>
+<li>$y_i^{\text{landmark}}$ is the ground truth for the facial key points.</li>
+</ul>
+<p>Each of these components is weighted appropriately to reflect the emphasis of the corresponding stage in the network.</p>
+<ol start="4">
+<li>Total Loss Function</li>
+</ol>
+<p>The total loss combines the three individual loss functions with different weights, formulated as:</p>
+<p>$L = \min \sum_{i=1}^N \sum_{j \in {\text{det}, \text{box}, \text{landmark}}} \alpha_j \beta_i^j L_i^j$</p>
+<p>Where:</p>
+<ul>
+<li>N is the total number of samples.</li>
+<li>$\alpha_j$ represents the weight for each task. For <strong>P-Net</strong> and <strong>R-Net</strong>, the focus is on face classification $(\alpha_{\text{det}} = 1)$ and bounding box regression $(\alpha_{\text{box}} = 0.5)$, with less emphasis on key point localization $(alpha_{\text{landmark}} = 0.5)$. For <strong>O-Net</strong>, the weights are adjusted to focus more on key point localization $(\alpha_{\text{landmark}} = 1)$.</li>
+<li>$\beta_i^j \in {0,1}$ indicates whether the sample participates in the loss computation for a specific task. If $\beta_i^j = 0$, the corresponding loss for that task is not computed.</li>
+</ul>
+<p>The loss is minimized using <strong>stochastic gradient descent (SGD)</strong>, and $L_i^j$ represents the computed loss for sample $x_i$ in task $j$. The total loss function reflects the combined optimization of face classification, bounding box regression, and key point localization.</p>
+<h1 id="Face-Recognition-FaceNet"><a href="#Face-Recognition-FaceNet" class="headerlink" title="Face Recognition FaceNet"></a>Face Recognition FaceNet</h1><p>After completing the face detection process, the next step is <strong>face recognition</strong>. Here, face recognition serves as a general term for face-related tasks, which can be divided into the following four categories:</p>
+<ol>
+<li><strong>Face Tracking</strong>: Face tracking refers to following an individual within a room after detecting a family member. This is essential for providing targeted services to the individual.</li>
+<li><strong>Face Verification</strong>: Face verification determines whether two faces appearing sequentially in the field of view belong to the same family member. This functionality is crucial for enabling directed services by confirming identity consistency.</li>
+<li><strong>Face Identification</strong>: Face identification focuses on determining which member of the family (stored in the robot’s facial database) a detected face belongs to. It facilitates member identification. Additionally, when a new face (such as a visiting relative or friend) is detected, it allows the system to add the new face to the database and carry out subsequent actions accordingly.</li>
+<li><strong>Face Clustering</strong>: Face clustering enhances the robustness of the robot. By collecting multiple facial images of family members under different angles, lighting conditions, and occlusions in the home environment, the robot can classify and organize these images into distinct clusters for more reliable recognition.</li>
+</ol>
+<p>These functions collectively enable the home service robot to handle a variety of face-related tasks, ensuring it operates effectively and adapts to dynamic household scenarios.</p>
+<h2 id="Why-FaceNet"><a href="#Why-FaceNet" class="headerlink" title="Why FaceNet?"></a>Why FaceNet?</h2><p>Before the introduction of <strong>FaceNet</strong>, traditional face recognition methods based on convolutional neural networks (CNNs) primarily utilized <strong>Siamese networks</strong> for feature extraction, followed by classification using methods like SVM (Support Vector Machines).</p>
+<p>The advent of <strong>FaceNet</strong> marked a significant milestone in face recognition. It achieved an impressive accuracy of <strong>99.63%</strong> on the widely used LFW (Labeled Faces in the Wild) dataset, setting a new record at the time. Additionally, it reached <strong>95.12%</strong> accuracy on the YouTube Faces database. The system reduced the error rate on these two datasets by 30%.</p>
+<p>The core idea behind FaceNet is to directly learn the mapping of facial images into a multi-dimensional Euclidean space. The similarity between two facial images is then determined by the distance between their respective feature points in this Euclidean space. As shown in Figure 3, the numerical value between two face images represents the Euclidean distance between their feature points in the multi-dimensional space.</p>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="https://allenzhuer.github.io/picx-images-hosting/image.7zqhjdm1te.webp"
+                      alt="Figure 3: FaceNet Model result"
+                ></p>
+<p>Face recognition models often face challenges due to variations in <strong>lighting</strong>, <strong>pose</strong>, and <strong>occlusion</strong>, which can significantly affect model performance. In Figure 3:</p>
+<ul>
+<li>The left and right images show two photos of the same person from different angles.</li>
+<li>The top and bottom images represent photos of two different individuals.</li>
+</ul>
+<p>From the figure, it is evident that the Euclidean distance between images of the same person is less than <strong>1.1</strong>, while the distance between images of different individuals exceeds <strong>1.1</strong>. In this case, the intra-class distance is clearly smaller than the inter-class distance, allowing a threshold of approximately <strong>1.1</strong> to be set for determining whether two images belong to the same person.</p>
+<p>This threshold-based approach significantly improves the robustness of face recognition, making it possible to handle variations in lighting, pose, and occlusion more effectively.</p>
+<h2 id="How-FaceNet-works"><a href="#How-FaceNet-works" class="headerlink" title="How FaceNet works?"></a>How FaceNet works?</h2><p>Previous face recognition methods based on convolutional neural networks (CNNs) trained on facial images typically connected a <strong>classification layer</strong> at the end. For recognizing untrained faces, these methods relied on the bottleneck layer. However, this approach had significant drawbacks, including <strong>low efficiency</strong> and poor performance of the bottleneck layer when applied to new, unseen face images.</p>
+<p>To improve the accuracy of face recognition, <strong>FaceNet</strong> introduced three key advantages:</p>
+<ol>
+<li><strong>Compact Feature Representation</strong>:<br>FaceNet represents facial images as a 128-dimensional vector. This dramatically reduces the dimensionality of the feature vector after global pooling, thereby significantly reducing the computational cost.</li>
+<li><strong>Similarity Measurement via Euclidean Distance</strong>:<br>The similarity between different face images is measured using the <strong>Euclidean distance</strong> between their feature vectors. A smaller Euclidean distance indicates higher similarity between the two faces, while a larger distance indicates lower similarity.</li>
+<li><strong>Triplet Loss for Classification</strong>:<br>FaceNet replaces the traditional <strong>Softmax layer</strong> with <strong>Triplet Loss</strong>, which directly classifies face embeddings. Based on a given threshold, the system determines whether two face images belong to the same person.</li>
+</ol>
+<p>Figure 4 illustrates the architecture of FaceNet. The pipeline is as follows:</p>
+<ol>
+<li><strong>Input Processing</strong>:<br>Facial images detected and cropped to a specified size by <strong>MTCNN</strong> are used as inputs to the model.</li>
+<li><strong>Deep Learning Architecture</strong>:<br>The cropped images are passed into a deep learning architecture, such as <strong>GoogleNet</strong> or <strong>Zeiler&amp;Fergus networks</strong>, to extract features.</li>
+<li><strong>Feature Normalization (L2 Normalization)</strong>:<br>The features output by the deep learning architecture are normalized using <strong>L2 normalization</strong>, mapping all feature vectors onto a hypersphere.</li>
+<li><strong>Feature Embedding</strong>:<br>The normalized feature vectors, called <strong>embeddings</strong>, represent the input facial image.</li>
+<li><strong>Triplet Loss for Classification</strong>:<br>Finally, the model uses <strong>Triplet Loss</strong> to classify the embeddings and determine whether two facial images represent the same person based on a predefined threshold.</li>
+</ol>
+<p>This approach enables FaceNet to perform face recognition with high efficiency and accuracy, making it robust in handling new facial data.</p>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="https://allenzhuer.github.io/picx-images-hosting/image.3d4uiorykf.webp"
+                      alt="Figure 4: FaceNet framework"
+                ></p>
+<h3 id="Triplet-Loss-Function"><a href="#Triplet-Loss-Function" class="headerlink" title="Triplet Loss Function"></a>Triplet Loss Function</h3><h4 id="Similarity-via-Euclidean-Distance"><a href="#Similarity-via-Euclidean-Distance" class="headerlink" title="Similarity via Euclidean Distance"></a>Similarity via Euclidean Distance</h4><p>The similarity between two images is determined by the <strong>Euclidean distance</strong> between their feature vectors, as shown:<br>$d(x_1, x_2) = | f(x_1) - f(x_2) |_2^2$</p>
+<p>Where:</p>
+<ul>
+<li>$f(x_1) and f(x_2)$ represent the mappings of images (x_1) and (x_2) onto a hypersphere in a (d)-dimensional Euclidean space.</li>
+<li>$d(x_1, x_2)$ denotes the Euclidean distance between the two feature vectors.</li>
+</ul>
+<h4 id="Purpose-of-Triplet-Loss"><a href="#Purpose-of-Triplet-Loss" class="headerlink" title="Purpose of Triplet Loss"></a>Purpose of Triplet Loss</h4><p>The <strong>Triplet Loss</strong> function calculates the loss for three input images at once. As illustrated in Figure 5, each calculation involves three samples:</p>
+<ol>
+<li><strong>Anchor $x_a$</strong>: The target image.</li>
+<li><strong>Positive $x_p$</strong>: An image of the same class as the Anchor.</li>
+<li><strong>Negative M</strong>: An image of a different class from the Anchor.</li>
+</ol>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="https://allenzhuer.github.io/picx-images-hosting/image.ic6cwkrxd.webp"
+                      alt="Figure 5: Triplet Loss example"
+                ></p>
+<h4 id="Objectives-of-Triplet-Loss"><a href="#Objectives-of-Triplet-Loss" class="headerlink" title="Objectives of Triplet Loss"></a>Objectives of Triplet Loss</h4><ol>
+<li><strong>Minimize</strong> the distance between the Anchor and Positive pair:<br>$d(x_a, x_p)$</li>
+<li><strong>Maximize</strong> the distance between the Anchor and Negative pair:<br>$d(x_a, x_n)$</li>
+</ol>
+<p>The Triplet Loss function ensures that:</p>
+<ul>
+<li>Images of the same class are pushed closer together in the embedding space.</li>
+<li>Images of different classes are pulled farther apart.</li>
+</ul>
+<p>This design enables the model to effectively distinguish between individuals by producing meaningful embeddings, making Triplet Loss a cornerstone of modern face recognition systems like <strong>FaceNet</strong>.</p>
+<h4 id="Triplet-Loss-Function-Analysis-Intra-Class-and-Inter-Class-Distance"><a href="#Triplet-Loss-Function-Analysis-Intra-Class-and-Inter-Class-Distance" class="headerlink" title="Triplet Loss Function Analysis: Intra-Class and Inter-Class Distance"></a>Triplet Loss Function Analysis: Intra-Class and Inter-Class Distance</h4><p>Due to variations in <strong>pose</strong>, <strong>lighting</strong>, and <strong>occlusion</strong>, different photos of the same person may sometimes result in the Euclidean distance between the Anchor and Positive being greater than the distance between the Anchor and Negative. This is an undesirable situation.</p>
+<p>As shown in Figure 6, before training, the distance between the Anchor and Negative might be smaller than the distance between the Anchor and Positive. After training, we aim to ensure that the <strong>intra-class distance</strong> (distance between Anchor and Positive) is significantly smaller than the <strong>inter-class distance</strong> (distance between Anchor and Negative). This relationship can be expressed mathematically as follows :</p>
+<p>$$<br>| f(x_i^a) - f(x_i^p) |_2^2 + \alpha &lt; | f(x_i^a) - f(x_i^n) |_2^2, \quad \forall (x_i^a, x_i^p, x_i^n) \in T<br>$$</p>
+<p>Where:</p>
+<ul>
+<li>$T$ is the set of all triplet combinations.</li>
+<li>$x_i^a$, $x_i^p$, and $x_i^n$ represent the <strong>Anchor</strong>, <strong>Positive</strong>, and <strong>Negative</strong> samples, respectively, within the set $T$.</li>
+<li>$\alpha$ is the margin between the intra-class and inter-class distances.</li>
+</ul>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="https://allenzhuer.github.io/picx-images-hosting/image.2rv6weq0ck.webp"
+                      alt="Figure 6: Triplet Loss Function"
+                ></p>
+<h4 id="Final-Triplet-Loss-Function"><a href="#Final-Triplet-Loss-Function" class="headerlink" title="Final Triplet Loss Function"></a>Final Triplet Loss Function</h4><p>To ensure that all triplet combinations satisfy the above constraint, Equation can be transformed into the final <strong>Triplet Loss Function</strong>, as shown:</p>
+<p>$$<br>L = \sum_{i=1}^N \left[ | f(x_i^a) - f(x_i^p) |_2^2 - | f(x_i^a) - f(x_i^n) |_2^2 \right]+ \alpha<br>$$</p>
+<p>Where:</p>
+<ul>
+<li>$N$ is the total number of triplets.</li>
+</ul>
+<h4 id="Explanation"><a href="#Explanation" class="headerlink" title="Explanation"></a>Explanation</h4><p>The Triplet Loss function:</p>
+<ol>
+<li>Penalizes cases where the <strong>intra-class distance</strong> ($d(x_a, x_p)$) is not sufficiently smaller than the <strong>inter-class distance</strong> ($d(x_a, x_n)$).</li>
+<li>Ensures that the model learns embeddings where samples of the same class are closer together and samples of different classes are farther apart, with a margin of at least $\alpha$.</li>
+</ol>
+<p>This formulation helps improve the robustness and accuracy of the model in face recognition tasks.</p>
+<h4 id="Efficient-Triplet-Selection-During-Training"><a href="#Efficient-Triplet-Selection-During-Training" class="headerlink" title="Efficient Triplet Selection During Training"></a>Efficient Triplet Selection During Training</h4><p>During the training phase, it is necessary to continuously search for triplet combinations to compute the loss. However, in large datasets, <strong>exhaustively enumerating all triplets</strong> and calculating the triplet loss requires substantial computational resources. Additionally, many easily distinguishable images do not contribute meaningfully to the model’s convergence.</p>
+<p>To address this problem, the authors of <a target="_blank" rel="noopener" href="https://arxiv.org/abs/1503.03832">Schroff F, Kalenichenko D, Philbin J. <em>Facenet: A unified embedding for face recognition and clustering.</em> Proceedings of the IEEE Conference on Computer Vision and Pattern Recognition, 2015: 815-823</a> proposed an efficient solution:</p>
+<ol>
+<li><p>For a given image, identify the <strong>Hard Positive</strong>:<br>The least similar image belonging to the same person (i.e., the hardest to recognize as the same person).</p>
+</li>
+<li><p>Identify the <strong>Hard Negative</strong>:<br>The most similar image belonging to a different person (i.e., the hardest to distinguish as a different person).</p>
+</li>
+</ol>
+<h4 id="Benefits-of-Hard-Example-Mining"><a href="#Benefits-of-Hard-Example-Mining" class="headerlink" title="Benefits of Hard Example Mining"></a>Benefits of Hard Example Mining</h4><p>By focusing on <strong>Hard Positives</strong> and <strong>Hard Negatives</strong>, the training process:</p>
+<ul>
+<li>Reduces computational overhead by avoiding redundant comparisons with easily distinguishable images.</li>
+<li>Enhances the model’s ability to handle challenging cases, improving its robustness and convergence efficiency.</li>
+</ul>
+<p>This method ensures that the triplet loss focuses on the most informative and challenging samples, driving the model to better distinguish between subtle intra-class variations and inter-class similarities.</p>
+<h1 id="Result"><a href="#Result" class="headerlink" title="Result"></a>Result</h1><p>In <strong>Figure 4</strong>, the term <strong>DEEP ARCHITECTURE</strong> refers to the deep learning framework. In the referenced paper, two neural network architectures were primarily used: <strong>Zeiler&amp;Fergus</strong>  and <strong>GoogleNet (Inception)</strong>.</p>
+<h2 id="Face-Database-LFW-and-Recognition-Results"><a href="#Face-Database-LFW-and-Recognition-Results" class="headerlink" title="Face Database: LFW and Recognition Results"></a>Face Database: LFW and Recognition Results</h2><p> A well-known face database <strong>LFW (Labeled Faces in the Wild)</strong> will be tested in this part. The paper  provides recognition rates for various network architectures and dimensions, as shown in <strong>Table 1</strong>:</p>
+<h3 id="Table-1-Recognition-Accuracy-for-Different-Network-Configurations"><a href="#Table-1-Recognition-Accuracy-for-Different-Network-Configurations" class="headerlink" title="Table 1. Recognition Accuracy for Different Network Configurations"></a>Table 1. Recognition Accuracy for Different Network Configurations</h3><table>
+<thead>
+<tr>
+<th><strong>Architecture</strong></th>
+<th><strong>Input Dimension</strong></th>
+<th><strong>Recognition Accuracy (VAL)</strong></th>
+</tr>
+</thead>
+<tbody><tr>
+<td>NN1 (Zeiler&amp;Fergus)</td>
+<td>220×220</td>
+<td>$87.9% \pm 1.9$</td>
+</tr>
+<tr>
+<td>NN2 (Inception)</td>
+<td>224×224</td>
+<td>$89.4% \pm 1.6$</td>
+</tr>
+<tr>
+<td>NN3 (Inception)</td>
+<td>160×160</td>
+<td>$88.3% \pm 1.7$</td>
+</tr>
+<tr>
+<td>NN4 (Inception)</td>
+<td>96×96</td>
+<td>$82.0% \pm 2.3$</td>
+</tr>
+<tr>
+<td>NNS1 (Mini Inception)</td>
+<td>—</td>
+<td>$82.4% \pm 2.4$</td>
+</tr>
+<tr>
+<td>NNS2 (Tiny Inception)</td>
+<td>—</td>
+<td>$51.9% \pm 2.9$</td>
+</tr>
+</tbody></table>
+<hr>
+<h3 id="Preprocessing-with-MTCNN-and-Training-Configuration"><a href="#Preprocessing-with-MTCNN-and-Training-Configuration" class="headerlink" title="Preprocessing with MTCNN and Training Configuration"></a>Preprocessing with MTCNN and Training Configuration</h3><p>In this study:</p>
+<ol>
+<li><p><strong>Preprocessing</strong>:<br>The images in the <strong>LFW dataset</strong> were first processed using the <strong>MTCNN model</strong>. The output consisted of 160×160 cropped facial images, which were used as inputs for training the <strong>FaceNet model</strong>.</p>
+</li>
+<li><p><strong>Updates to GoogleNet</strong>:<br>Over time, Google continued improving the GoogleNet architecture. This study primarily used <strong>Inception V4</strong> to process the dataset.</p>
+</li>
+<li><p><strong>Training Parameters</strong>:  </p>
+<ul>
+<li>Learning rate: $0.1$  </li>
+<li>Exponential decay rate: $0.999$  </li>
+<li>Epochs: $400$</li>
+</ul>
+</li>
+</ol>
+<p>Key Takeaways</p>
+<ul>
+<li>Larger input dimensions (e.g., 224×224 vs. 96×96) and more advanced architectures (e.g., Inception vs. Mini Inception) resulted in higher recognition accuracy. </li>
+<li>Processing the dataset with <strong>MTCNN</strong> ensured high-quality cropped facial images, which improved the performance of the FaceNet model.  </li>
+<li><strong>Inception V4</strong> and well-tuned hyperparameters significantly enhanced the model’s robustness and accuracy on the LFW dataset.</li>
+</ul>
+<p>The following screenshot will be the result or output of the model.</p>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="https://allenzhuer.github.io/picx-images-hosting/image.3nrobv6rdw.webp"
+                      alt="Figure 7: MTCNN for face detection on LFW"
+                ></p>
+<p>From <strong>Figure 7</strong>, it can be observed that <strong>MTCNN</strong> successfully detected faces in all 13,233 images of the <strong>LFW dataset</strong>. The detected faces were then scaled and cropped to the required dimensions for subsequent processing.</p>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="https://allenzhuer.github.io/picx-images-hosting/image.7ax7ze2rf1.webp"
+                      alt="Figure 8: Facenet training results map on LFW dataset"
+                ></p>
+<p><strong>Figure 8</strong> summarizes the performance of <strong>FaceNet</strong> on the LFW dataset, with the following key metrics:</p>
+<ul>
+<li><strong>Accuracy</strong>: $98.50%$</li>
+<li><strong>Validation Rate</strong>: $90.06%$</li>
+<li><strong>AUC (Area Under the Curve)</strong>: $0.998$</li>
+<li><strong>EER (Equal Error Rate)</strong>: $0.016$</li>
+</ul>
+<h3 id="Insights"><a href="#Insights" class="headerlink" title="Insights:"></a>Insights:</h3><ul>
+<li>An <strong>AUC</strong> value close to $1$ indicates excellent model performance.</li>
+<li>A low <strong>EER</strong> of $0.016$ further confirms that FaceNet effectively meets the requirements of face recognition tasks.</li>
+</ul>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="https://allenzhuer.github.io/picx-images-hosting/image.wim3sl29q.webp"
+                      alt="Figure 9: The European -style distance matrix between three pictures"
+                ></p>
+<p><strong>Figure 9</strong> presents a comparison of non-database facial images:</p>
+<ul>
+<li><strong>Images 0.jpg and 1.jpg</strong>: Two images of the same person taken from different angles.</li>
+<li><strong>Image 11.jpg</strong>: An image of a different individual.</li>
+</ul>
+<p>All the images are of <strong>Asian faces</strong>. The results demonstrate:</p>
+<ul>
+<li><strong>Intra-class distances</strong> (same person) are consistently smaller than $0.8$.</li>
+<li><strong>Inter-class distances</strong> (different people) are significantly larger than $1.0$.</li>
+</ul>
+<h3 id="Conclusion"><a href="#Conclusion" class="headerlink" title="Conclusion:"></a>Conclusion:</h3><p>These results show that FaceNet performs well even on <strong>Asian faces</strong>, maintaining clear separations between intra-class and inter-class distances. This indicates that the model is robust across diverse facial datasets.</p>
+<p>TODO: real case results</p>
 
         </div>
 
@@ -357,7 +658,7 @@
         <aside class="page-aside">
             <div class="post-toc-wrap">
     <div class="post-toc">
-        <ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#Face-Recognition"><span class="nav-number">1.</span> <span class="nav-text">Face Recognition</span></a></li></ol>
+        <ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#Face-Recognition"><span class="nav-number">1.</span> <span class="nav-text">Face Recognition</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Face-Detection-MTCNN"><span class="nav-number">2.</span> <span class="nav-text">Face Detection MTCNN</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#Why-MTCNN-rather-than-OpenCV"><span class="nav-number">2.1.</span> <span class="nav-text">Why MTCNN rather than OpenCV?</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#How-MTCNN-works"><span class="nav-number">2.2.</span> <span class="nav-text">How MTCNN works?</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#First-Stage-P-Net"><span class="nav-number">2.2.1.</span> <span class="nav-text">First Stage: P-Net</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Second-Stage-R-Net"><span class="nav-number">2.2.2.</span> <span class="nav-text">Second Stage: R-Net</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Third-Stage-O-Net"><span class="nav-number">2.2.3.</span> <span class="nav-text">Third Stage: O-Net</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Loss-Function"><span class="nav-number">2.2.4.</span> <span class="nav-text">Loss Function</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Face-Recognition-FaceNet"><span class="nav-number">3.</span> <span class="nav-text">Face Recognition FaceNet</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#Why-FaceNet"><span class="nav-number">3.1.</span> <span class="nav-text">Why FaceNet?</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#How-FaceNet-works"><span class="nav-number">3.2.</span> <span class="nav-text">How FaceNet works?</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Triplet-Loss-Function"><span class="nav-number">3.2.1.</span> <span class="nav-text">Triplet Loss Function</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#Similarity-via-Euclidean-Distance"><span class="nav-number">3.2.1.1.</span> <span class="nav-text">Similarity via Euclidean Distance</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Purpose-of-Triplet-Loss"><span class="nav-number">3.2.1.2.</span> <span class="nav-text">Purpose of Triplet Loss</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Objectives-of-Triplet-Loss"><span class="nav-number">3.2.1.3.</span> <span class="nav-text">Objectives of Triplet Loss</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Triplet-Loss-Function-Analysis-Intra-Class-and-Inter-Class-Distance"><span class="nav-number">3.2.1.4.</span> <span class="nav-text">Triplet Loss Function Analysis: Intra-Class and Inter-Class Distance</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Final-Triplet-Loss-Function"><span class="nav-number">3.2.1.5.</span> <span class="nav-text">Final Triplet Loss Function</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Explanation"><span class="nav-number">3.2.1.6.</span> <span class="nav-text">Explanation</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Efficient-Triplet-Selection-During-Training"><span class="nav-number">3.2.1.7.</span> <span class="nav-text">Efficient Triplet Selection During Training</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Benefits-of-Hard-Example-Mining"><span class="nav-number">3.2.1.8.</span> <span class="nav-text">Benefits of Hard Example Mining</span></a></li></ol></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Result"><span class="nav-number">4.</span> <span class="nav-text">Result</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#Face-Database-LFW-and-Recognition-Results"><span class="nav-number">4.1.</span> <span class="nav-text">Face Database: LFW and Recognition Results</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Table-1-Recognition-Accuracy-for-Different-Network-Configurations"><span class="nav-number">4.1.1.</span> <span class="nav-text">Table 1. Recognition Accuracy for Different Network Configurations</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Preprocessing-with-MTCNN-and-Training-Configuration"><span class="nav-number">4.1.2.</span> <span class="nav-text">Preprocessing with MTCNN and Training Configuration</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Insights"><span class="nav-number">4.1.3.</span> <span class="nav-text">Insights:</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Conclusion"><span class="nav-number">4.1.4.</span> <span class="nav-text">Conclusion:</span></a></li></ol></li></ol></li></ol>
     </div>
 </div>
         </aside>
