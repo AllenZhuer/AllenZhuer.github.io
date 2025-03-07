@@ -71,9 +71,9 @@
     <link href="http://example.com/2024/12/12/The-road-to-Navigation/"/>
     <id>http://example.com/2024/12/12/The-road-to-Navigation/</id>
     <published>2024-12-12T03:28:35.000Z</published>
-    <updated>2024-12-15T14:37:52.117Z</updated>
+    <updated>2024-12-20T02:03:34.355Z</updated>
     
-    <content type="html"><![CDATA[<h1 id="Global-path-planning-algorithm"><a href="#Global-path-planning-algorithm" class="headerlink" title="Global path planning algorithm"></a>Global path planning algorithm</h1><h2 id="Dijkstra"><a href="#Dijkstra" class="headerlink" title="Dijkstra"></a>Dijkstra</h2><h2 id="A"><a href="#A" class="headerlink" title="A*"></a>A*</h2><h1 id="Local-path-planning-algorithm"><a href="#Local-path-planning-algorithm" class="headerlink" title="Local path planning algorithm"></a>Local path planning algorithm</h1><h2 id="DWA"><a href="#DWA" class="headerlink" title="DWA"></a>DWA</h2><h2 id="TEB"><a href="#TEB" class="headerlink" title="TEB"></a>TEB</h2>]]></content>
+    <content type="html"><![CDATA[<h1 id="Global-path-planning-algorithm"><a href="#Global-path-planning-algorithm" class="headerlink" title="Global path planning algorithm"></a>Global path planning algorithm</h1><h2 id="Dijkstra"><a href="#Dijkstra" class="headerlink" title="Dijkstra"></a>Dijkstra</h2><h3 id="What-is-Dijkstra’s-Algorithm"><a href="#What-is-Dijkstra’s-Algorithm" class="headerlink" title="What is Dijkstra’s Algorithm?"></a><strong>What is Dijkstra’s Algorithm?</strong></h3><p>Dijkstra’s algorithm is fundamental in robotics, especially for path planning, where robots need to find the shortest path from one point to another.</p><p>Dijkstra’s algorithm finds the shortest path between nodes in a graph. In robotics, nodes represent positions, and edges (connections between nodes) represent possible paths with associated costs (distances, time, or effort).</p><h2 id="A"><a href="#A" class="headerlink" title="A*"></a>A*</h2><h1 id="Local-path-planning-algorithm"><a href="#Local-path-planning-algorithm" class="headerlink" title="Local path planning algorithm"></a>Local path planning algorithm</h1><h2 id="DWA"><a href="#DWA" class="headerlink" title="DWA"></a>DWA</h2><h2 id="TEB"><a href="#TEB" class="headerlink" title="TEB"></a>TEB</h2>]]></content>
     
     
       
