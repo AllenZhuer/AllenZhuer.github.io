@@ -6,7 +6,7 @@
   <link href="http://example.com/atom.xml" rel="self"/>
   
   <link href="http://example.com/"/>
-  <updated>2025-05-05T13:13:56.110Z</updated>
+  <updated>2025-05-05T13:41:38.813Z</updated>
   <id>http://example.com/</id>
   
   <author>
@@ -15,6 +15,30 @@
   </author>
   
   <generator uri="https://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>RAG与LoRA</title>
+    <link href="http://example.com/2025/05/05/RAG%E4%B8%8ELoRA/"/>
+    <id>http://example.com/2025/05/05/RAG%E4%B8%8ELoRA/</id>
+    <published>2025-05-05T13:33:21.000Z</published>
+    <updated>2025-05-05T13:41:38.813Z</updated>
+    
+    <content type="html"><![CDATA[<h1 id="RAG-与-LoRA-技术详解"><a href="#RAG-与-LoRA-技术详解" class="headerlink" title="RAG 与 LoRA 技术详解"></a>RAG 与 LoRA 技术详解</h1><p>本文档总结了 RAG (Retrieval-Augmented Generation) 和 LoRA (Low-Rank Adaptation) 两种在大型语言模型 (LLM) 领域常用的技术。</p><h2 id="RAG-Retrieval-Augmented-Generation-检索增强生成"><a href="#RAG-Retrieval-Augmented-Generation-检索增强生成" class="headerlink" title="RAG (Retrieval-Augmented Generation) - 检索增强生成"></a>RAG (Retrieval-Augmented Generation) - 检索增强生成</h2><h3 id="核心思想"><a href="#核心思想" class="headerlink" title="核心思想"></a>核心思想</h3><p>RAG 结合了<strong>信息检索</strong>和<strong>自然语言生成</strong>，在 LLM 生成响应前，先从外部知识库检索相关信息，并将这些信息作为上下文提供给 LLM，以生成更准确、更可靠的回答。</p><h3 id="解决的问题"><a href="#解决的问题" class="headerlink" title="解决的问题"></a>解决的问题</h3><p>缓解 LLM 面临的挑战：</p><ul><li><strong>知识静态性:</strong> 无法获取最新信息。</li><li><strong>幻觉:</strong> 编造错误信息。</li><li><strong>领域知识缺乏:</strong> 专业知识不足。</li><li><strong>无法访问私有/实时数据。</strong></li><li><strong>缺乏可解释性:</strong> 难以溯源信息来源。</li><li><strong>更新成本高:</strong> 重新训练 LLM 成本高昂。</li></ul><h3 id="工作流程"><a href="#工作流程" class="headerlink" title="工作流程"></a>工作流程</h3><ol><li> <strong>输入 (Input):</strong> 用户提问或提示。</li><li><strong>检索 (Retrieval):</strong><ul><li>  查询编码 (Query Encoding): 将输入转为向量。</li><li>  相似性搜索 (Similarity Search): 在向量数据库中搜索相似的文本块。</li><li>  获取相关文本 (Retrieve Relevant Chunks): 得到 Top-K 相关文本块。</li></ul></li><li><strong>增强 (Augmentation):</strong><ul><li>  构建上下文提示 (Contextual Prompt Construction): 将检索到的文本与原始查询组合成新提示。</li></ul></li><li><strong>生成 (Generation):</strong><ul><li>  LLM 推理 (LLM Inference): 将增强提示输入 LLM。</li><li>  生成响应 (Generate Response): LLM 基于内部知识和外部上下文生成回答。</li></ul></li></ol><h3 id="关键组成部分"><a href="#关键组成部分" class="headerlink" title="关键组成部分"></a>关键组成部分</h3><ul><li>  <strong>检索器 (Retriever):</strong> 编码器、知识库（向量数据库）、索引。</li><li>  <strong>生成器 (Generator):</strong> 大型语言模型 (LLM)。</li><li>  <strong>知识库构建流程 (Indexing Pipeline):</strong> 数据加载、文本切分、向量化、索引存储。</li></ul><h3 id="优势"><a href="#优势" class="headerlink" title="优势"></a>优势</h3><ul><li>  <strong>知识实时性:</strong> 可通过更新知识库获取最新信息。</li><li>  <strong>减少幻觉:</strong> 提供事实依据。</li><li>  <strong>提高准确性与相关性:</strong> 基于相关上下文生成。</li><li>  <strong>领域适应性:</strong> 易于适应特定领域。</li><li>  <strong>可解释性与可溯源性:</strong> 可追踪信息来源。</li><li>  <strong>成本效益:</strong> 更新知识库比重训 LLM 便宜。</li><li>  <strong>数据隐私:</strong> 私有数据可存于外部库。</li></ul><h3 id="挑战"><a href="#挑战" class="headerlink" title="挑战"></a>挑战</h3><ul><li>  <strong>检索质量:</strong> 检索效果是瓶颈。</li><li>  <strong>文本块切分策略:</strong> 影响上下文和精度。</li><li>  <strong>检索与生成的平衡。</strong></li><li>  <strong>处理冲突信息。</strong></li><li>  <strong>系统复杂性。</strong></li><li>  <strong>延迟:</strong> 检索增加响应时间。</li><li>  <strong>成本:</strong> 向量数据库和检索仍有成本。</li></ul><hr><h2 id="LoRA-Low-Rank-Adaptation-低秩适应"><a href="#LoRA-Low-Rank-Adaptation-低秩适应" class="headerlink" title="LoRA (Low-Rank Adaptation) - 低秩适应"></a>LoRA (Low-Rank Adaptation) - 低秩适应</h2><h3 id="背景与动机"><a href="#背景与动机" class="headerlink" title="背景与动机"></a>背景与动机</h3><p>解决大型模型<strong>完全微调 (Full Fine-tuning)</strong> 带来的问题：</p><ul><li>计算资源消耗大 (显存、算力)。</li><li>存储成本高 (每个任务一个完整副本)。</li><li>训练时间长。</li></ul><p>LoRA 是一种<strong>参数高效微调 (Parameter-Efficient Fine-Tuning, PEFT)</strong> 技术。</p><h3 id="核心思想-1"><a href="#核心思想-1" class="headerlink" title="核心思想"></a>核心思想</h3><p>假设模型权重在适应新任务时的<strong>变化量 ($\Delta W$)</strong> 是<strong>低秩 (Low-Rank)</strong> 的。因此，可以通过学习两个小的低秩矩阵 $A$ 和 $B$ (其中 $\Delta W = BA$) 来表示这个变化量，而无需更新全部原始权重 $W_0$。</p><h3 id="工作原理"><a href="#工作原理" class="headerlink" title="工作原理"></a>工作原理</h3><ul><li>  冻结原始模型权重 $W_0$。</li><li>  在选定的层（如注意力 QKV 矩阵）旁边添加低秩适配器矩阵 $A$ ($r \times k$) 和 $B$ ($d \times r$)，其中 $r$ 是秩 ($r \ll \min(d, k)$)。</li><li>  只训练 $A$ 和 $B$ 的参数。</li><li>  前向传播时计算：$h = W_0 x + \alpha B A x$。</li></ul><h3 id="关键组成部分与超参数"><a href="#关键组成部分与超参数" class="headerlink" title="关键组成部分与超参数"></a>关键组成部分与超参数</h3><ul><li>  <strong>适配器矩阵 A 和 B:</strong> 新增的可训练参数。</li><li>  <strong>秩 (Rank, r):</strong> 控制适配器大小的关键超参数 (如 4, 8, 16, …)。</li><li>  <strong>缩放因子 ($\alpha$):</strong> 控制适配器影响程度。</li><li>  <strong>目标模块 (Target Modules):</strong> 选择应用 LoRA 的层。</li></ul><h3 id="优势-1"><a href="#优势-1" class="headerlink" title="优势"></a>优势</h3><ul><li>  <strong>极高参数效率:</strong> 显著降低显存需求。</li><li>  <strong>减少存储:</strong> 只需存储小型适配器权重。</li><li>  <strong>可能更快的训练:</strong> 低显存允许更大批量。</li><li>  <strong>无额外推理延迟:</strong> 训练后可将 $BA$ 合并回 $W_0$ ($W = W_0 + BA$)，推理时无额外计算。</li><li>  <strong>可媲美的性能:</strong> 效果接近完全微调。</li><li>  <strong>便捷的任务切换:</strong> 易于加载不同适配器。</li></ul><h3 id="挑战-1"><a href="#挑战-1" class="headerlink" title="挑战"></a>挑战</h3><ul><li>  <strong>超参数选择:</strong> $r$, $\alpha$, 目标模块需要调优。</li><li>  <strong>并非万能:</strong> 对某些任务可能不如完全微调。</li><li>  <strong>合并操作:</strong> 需要额外步骤来消除推理延迟。</li></ul><h3 id="应用场景"><a href="#应用场景" class="headerlink" title="应用场景"></a>应用场景</h3><ul><li>  LLM 下游任务微调。</li><li>  模型风格、领域知识适应。</li><li>  文生图模型（Stable Diffusion）的风格/人物学习。</li><li>  高效实现对齐技术（如 SFT）。 </li></ul>]]></content>
+    
+    
+      
+      
+    <summary type="html">&lt;h1 id=&quot;RAG-与-LoRA-技术详解&quot;&gt;&lt;a href=&quot;#RAG-与-LoRA-技术详解&quot; class=&quot;headerlink&quot; title=&quot;RAG 与 LoRA 技术详解&quot;&gt;&lt;/a&gt;RAG 与 LoRA 技术详解&lt;/h1&gt;&lt;p&gt;本文档总结了 RAG (Retrie</summary>
+      
+    
+    
+    
+    
+    <category term="RAG" scheme="http://example.com/tags/RAG/"/>
+    
+    <category term="LoRA" scheme="http://example.com/tags/LoRA/"/>
+    
+  </entry>
   
   <entry>
     <title>提示词工程 Prompt Engineering</title>
