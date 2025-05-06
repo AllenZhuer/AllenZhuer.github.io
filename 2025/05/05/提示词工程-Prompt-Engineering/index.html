@@ -259,20 +259,20 @@
 <p>补充：<br>我在学习过程中，所有示例都是用OpenAI的Playground或者Claude 3.5 Sonnet模型。这些提示方法也适用于其他类似能力的模型，但不同模型的响应可能会有所差异。</p>
 <h2 id="LLM参数介绍"><a href="#LLM参数介绍" class="headerlink" title="LLM参数介绍"></a>LLM参数介绍</h2><p>在设计和测试提示时，我们通常通过API与大语言模型进行交互。通过调整几个关键参数，可以为同一个提示获得不同的结果，调整这些设置对于提高响应的可靠性和符合预期非常重要。以下是使用各种LLM提供商时会遇到的常见设置：</p>
 <ol>
-<li><p>Temperature（温度）<br>简单来说，温度数值越低，结果越确定，模型总是选择概率最高的下一个词。低温度更加适合进行基于事实的查询，因为这将更加精确和简洁；而高温度本质上是增加了其他词的权重，更加适合更有创意但是可能不是很准确的情况，比如头脑风暴，创意写作。</p>
+<li><p>Temperature（温度）<br> 简单来说，温度数值越低，结果越确定，模型总是选择概率最高的下一个词。低温度更加适合进行基于事实的查询，因为这将更加精确和简洁；而高温度本质上是增加了其他词的权重，更加适合更有创意但是可能不是很准确的情况，比如头脑风暴，创意写作。</p>
 </li>
-<li><p>Top P（核采样）<br>核采样是一种与温度一起使用的采样技术，旨在控制模型的确定性。使用Top P意味着只考虑构成top_p概率质量的词进行响应，如果需要准确和事实性的答案，保持较低的值；如果需要更多样化的回答，可以设置更高的值。</p>
+<li><p>Top P（核采样）<br> 核采样是一种与温度一起使用的采样技术，旨在控制模型的确定性。使用Top P意味着只考虑构成top_p概率质量的词进行响应，如果需要准确和事实性的答案，保持较低的值；如果需要更多样化的回答，可以设置更高的值。</p>
 </li>
 </ol>
 <p>  一般建议是调整Temperature或Top P，但不要同时调整两者。</p>
 <ol start="3">
-<li><p>Max Length（最大长度）<br>通过调整最大长度可以管理模型生成的词元（token）数量。指定最大长度有助于防止冗长或不相关的回答，并控制成本。</p>
+<li><p>Max Length（最大长度）<br> 通过调整最大长度可以管理模型生成的词元（token）数量。指定最大长度有助于防止冗长或不相关的回答，并控制成本。</p>
 </li>
-<li><p>Stop Sequences（停止序列）<br>停止序列是一个能够使模型停止生成词元的字符串。指定停止序列是控制模型回答长度和结构的另一种方式。例如，可以通过添加”11”作为停止序列，告诉模型生成不超过10项的列表。</p>
+<li><p>Stop Sequences（停止序列）<br> 停止序列是一个能够使模型停止生成词元的字符串。指定停止序列是控制模型回答长度和结构的另一种方式。例如，可以通过添加”11”作为停止序列，告诉模型生成不超过10项的列表。</p>
 </li>
-<li><p>Frequency Penalty（频率惩罚）<br>频率惩罚会对下一个词元施加与该词元在回答和提示中已出现次数成正比的惩罚。频率惩罚越高，一个词再次出现的可能性就越低。这个设置通过给出现更多的词元更高的惩罚来减少模型回答中词语的重复。</p>
+<li><p>Frequency Penalty（频率惩罚）<br> 频率惩罚会对下一个词元施加与该词元在回答和提示中已出现次数成正比的惩罚。频率惩罚越高，一个词再次出现的可能性就越低。这个设置通过给出现更多的词元更高的惩罚来减少模型回答中词语的重复。</p>
 </li>
-<li><p>Presence Penalty（存在惩罚）<br>存在惩罚也会对重复的词元施加惩罚，但与频率惩罚不同，所有重复词元的惩罚都是相同的。出现两次的词元和出现10次的词元受到的惩罚是一样的。这个设置可以防止模型在回答中过于频繁地重复短语。如果希望模型生成多样化或创意性的文本，可能需要使用较高的存在惩罚；或者，如果需要模型保持专注，可以尝试使用较低的存在惩罚。</p>
+<li><p>Presence Penalty（存在惩罚）<br> 存在惩罚也会对重复的词元施加惩罚，但与频率惩罚不同，所有重复词元的惩罚都是相同的。出现两次的词元和出现10次的词元受到的惩罚是一样的。这个设置可以防止模型在回答中过于频繁地重复短语。如果希望模型生成多样化或创意性的文本，可能需要使用较高的存在惩罚；或者，如果需要模型保持专注，可以尝试使用较低的存在惩罚。</p>
 </li>
 </ol>
 <p>  与温度和top_p类似，一般建议是调整频率或存在惩罚，但不要同时调整两者。</p>
@@ -458,6 +458,9 @@
 <li><strong>背景信息</strong>：提供AI可能需要的额外参考数据</li>
 <li><strong>最终指示</strong>：引导AI采用特定的思考方式，如系统性、逐步分析</li>
 </ul>
+<p>此外，在使用Prompt 的过程中，经过不断尝试需要添加以下几点来增强表现的能力</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line">## PERSISTENCE</span><br><span class="line">You are an agent - please keep going until the user&#x27;s query is completely </span><br><span class="line">resolved, before ending your turn and yielding back to the user. Only </span><br><span class="line">terminate your turn when you are sure that the problem is solved.</span><br><span class="line"></span><br><span class="line">## TOOL CALLING</span><br><span class="line">If you are not sure about file content or codebase structure pertaining to </span><br><span class="line">the user&#x27;s request, use your tools to read files and gather the relevant </span><br><span class="line">information: do NOT guess or make up an answer.</span><br><span class="line"></span><br><span class="line">## PLANNING</span><br><span class="line">You MUST plan extensively before each function call, and reflect </span><br><span class="line">extensively on the outcomes of the previous function calls. DO NOT do this </span><br><span class="line">entire process by making function calls only, as this can impair your </span><br><span class="line">ability to solve the problem and think insightfully.</span><br><span class="line"></span><br><span class="line">## 坚持</span><br><span class="line">您是一名代理 - 请持续操作，直到用户的查询完全解决，然后结束您的回合并交还给用户。只有当您确定问题已解决时，才终止您的回合。</span><br><span class="line"></span><br><span class="line">## 工具调用</span><br><span class="line">如果您不确定与用户请求相关的文件内容或代码库结构，请使用您的工具读取文件并收集相关信息：请勿猜测或编造答案。</span><br><span class="line"></span><br><span class="line">## 规划</span><br><span class="line">您必须在每次函数调用之前进行周密的规划，并充分反思之前函数调用的结果。不要在整个过程中只进行函数调用，因为这会削弱您解决问题和深入思考的能力。</span><br></pre></td></tr></table></figure>
+
 <p>在实际应用中，你可以根据任务的复杂性和具体需求选择性使用这些部分。对于简单任务，可能只需要指令和输出格式；而对于复杂分析，完整的模版可能会带来更好的结果。</p>
 <h2 id="LangGPT提示词模版"><a href="#LangGPT提示词模版" class="headerlink" title="LangGPT提示词模版"></a>LangGPT提示词模版</h2><p><a href="%EF%BC%88https://arxiv.org/abs/2402.16929%EF%BC%89">LangGPT</a> 是一个创新的结构化提示词设计框架，旨在让每个人都能成为提示词专家。该项目由”云中江树”创建，通过将编程语言的思想应用到提示工程中，提供了一种系统化、可复用的提示词创建方法。</p>
 <h3 id="核心理念"><a href="#核心理念" class="headerlink" title="核心理念"></a>核心理念</h3><p>LangGPT的核心是将提示词视为一种”编程语言”，通过结构化的模板来定义与AI的交互。这种方法有以下优势：</p>
