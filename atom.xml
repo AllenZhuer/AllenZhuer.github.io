@@ -6,7 +6,7 @@
   <link href="http://example.com/atom.xml" rel="self"/>
   
   <link href="http://example.com/"/>
-  <updated>2025-05-12T01:23:41.920Z</updated>
+  <updated>2025-05-28T06:02:26.698Z</updated>
   <id>http://example.com/</id>
   
   <author>
@@ -15,6 +15,32 @@
   </author>
   
   <generator uri="https://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>AI tools explain</title>
+    <link href="http://example.com/2025/05/28/AI-tools-explain/"/>
+    <id>http://example.com/2025/05/28/AI-tools-explain/</id>
+    <published>2025-05-28T06:00:07.000Z</published>
+    <updated>2025-05-28T06:02:26.698Z</updated>
+    
+    <content type="html"><![CDATA[<h1 id="AI核心概念漫谈：从聊天框到智能协作体系"><a href="#AI核心概念漫谈：从聊天框到智能协作体系" class="headerlink" title="AI核心概念漫谈：从聊天框到智能协作体系"></a>AI核心概念漫谈：从聊天框到智能协作体系</h1><p>大家好！最近AI圈各种新名词是不是让你眼花缭乱？Agent、MCP、Function Calling……它们到底都是啥？别急，今天咱们就用大白话，把这些关键概念串起来，讲讲它们是怎么一步步发展到今天的。</p><h2 id="一切的开始：用户提示词-User-Prompt"><a href="#一切的开始：用户提示词-User-Prompt" class="headerlink" title="一切的开始：用户提示词 (User Prompt)"></a>一切的开始：用户提示词 (User Prompt)</h2><p>最早咱们接触AI，比如刚出来的ChatGPT那会儿，它主要就像个聊天窗口：</p><ul><li>  你输入一句话——这就是你的 **用户提示词 (User Prompt)**。基本上就是你想问的问题或者想说的话。</li><li>  AI模型呢，就回复你一句话。</li></ul><p>简单直接，但有时候有点“呆”。</p><h2 id="给AI加点“人设”：系统提示词-System-Prompt"><a href="#给AI加点“人设”：系统提示词-System-Prompt" class="headerlink" title="给AI加点“人设”：系统提示词 (System Prompt)"></a>给AI加点“人设”：系统提示词 (System Prompt)</h2><p>为了让AI不那么千篇一律，<strong>系统提示词 (System Prompt)</strong> 就出现了：</p><ul><li>你可以把 <strong>系统提示词</strong> 想象成一个藏在幕后的“说明书”或“角色卡”，用来告诉AI它应该扮演什么样的角色。<ul><li>  比如：“你现在是一个暴躁的海盗船长。”</li><li>  或者：“你是一个超级有耐心的金牌客服。”</li></ul></li><li>  它规定了AI的性格、背景、说话的口气等等。</li><li>  当你再发送你的 <strong>用户提示词</strong> 时，系统就会偷偷地把这个 <strong>系统提示词</strong> 也一起发给AI。</li><li>  <strong>举个例子</strong>：如果你对一个被设定成你“野蛮女友”的AI说“我肚子疼”，你可能就会得到一句：“哼，老娘也疼，一边待着去！” 是不是就生动多了？</li><li>  在一些AI工具（比如ChatGPT）里，你可能会看到一个叫“自定义指令”(Custom Instructions)的功能，那里你就可以写下你希望AI怎么回应你，那些话就会变成系统提示词的一部分。</li></ul><h2 id="让AI不止会说，还会“做”：AI智能体-AI-Agent-与-智能体工具-Agent-Tools"><a href="#让AI不止会说，还会“做”：AI智能体-AI-Agent-与-智能体工具-Agent-Tools" class="headerlink" title="让AI不止会说，还会“做”：AI智能体 (AI Agent) 与 智能体工具 (Agent Tools)"></a>让AI不止会说，还会“做”：AI智能体 (AI Agent) 与 智能体工具 (Agent Tools)</h2><p>光会聊天还不够，我们希望AI能帮我们干点实事。于是，<strong>AI智能体 (AI Agent)</strong> 的概念应运而生。</p><ul><li>  <strong>早期尝试</strong>：一个叫 <strong>AutoGPT</strong> 的开源项目做了先锋。它的核心想法是：能不能让AI自己去用工具呢？</li><li>**智能体工具 (Agent Tools)**：你需要先为AI准备好一些“工具”，通常是一些代码函数。<ul><li>  例如：一个叫 <code>list_files</code> (列出文件) 的函数，一个叫 <code>read_files</code> (读取文件) 的函数。</li></ul></li><li><strong>AI智能体 (AI Agent) 的工作</strong>：<ol><li> 你把这些工具的功能描述、怎么用，都告诉AI智能体（比如AutoGPT）。</li><li> AI智能体会把这些工具信息打包成一个大的<strong>系统提示词</strong>，连同你的请求（比如“帮我找找《原神》的安装目录”）一起发给AI模型。</li><li> 如果AI模型足够聪明，它就会按照你要求的格式回复说：“好的，我需要用 <code>list_files</code> 这个工具去扫描一下C盘。”</li><li> AI智能体收到这个指令后，就真的去调用你写好的 <code>list_files</code> 函数，执行完，把结果（比如C盘的文件列表）再告诉AI。</li><li> AI看到结果后，再决定下一步该干啥，这个过程不断重复，直到任务完成。</li></ol></li><li>  所以，<strong>AI智能体</strong>就像一个中介、一个项目经理，它负责在AI模型、各种工具和你之间传递信息，协调一切。</li></ul><h2 id="提高效率和可靠性：函数调用-Function-Calling"><a href="#提高效率和可靠性：函数调用-Function-Calling" class="headerlink" title="提高效率和可靠性：函数调用 (Function Calling)"></a>提高效率和可靠性：函数调用 (Function Calling)</h2><p>AI模型有时候不太“听话”，回复的工具指令格式可能不对，导致Agent看不懂。这就需要反复重试，效率不高。</p><p>为了解决这个问题，AI大厂们推出了 <strong>函数调用 (Function Calling)</strong> 功能：</p><ul><li>  <strong>标准化</strong>：它的核心思想就是，把AI使用工具的这个过程，搞得非常规范、非常可靠。</li><li>  <strong>结构化描述</strong>：不再是在系统提示词里用自然语言描述工具，而是规定了一种非常严格的、结构化的方式（通常是用JSON这种格式）来定义每一个工具：它的名字是啥、它能干啥、它需要哪些信息（参数）才能工作。</li><li>  <strong>专用通道</strong>：这些结构化的工具定义，不再是混在系统提示词里，而是通过API请求中一个专门的字段发给AI模型。</li><li>  <strong>AI专项训练</strong>：AI模型本身也经过了专门的训练，能够理解这种结构化的工具定义，并且在它想使用工具的时候，会以一种非常特定、标准化的格式来回复。</li><li><strong>好处</strong>：<ul><li>  AI智能体能准确地知道AI想要干什么。</li><li>  就算AI偶尔还是搞错了回复格式，AI模型背后的服务器自己就能检测到，并且在内部悄悄重试，用户和Agent可能都感觉不到。</li><li>  开发Agent就容易多了，也省去了很多因为格式错误反复尝试带来的开销。</li></ul></li></ul><p>所以，函数调用就像是一种更专业、更流畅的方式，让AI能够准确地表达“我要用这个工具，参数是这些”。</p><h2 id="连接Agent与工具的“USB”：MCP-Multi-Capability-Protocol"><a href="#连接Agent与工具的“USB”：MCP-Multi-Capability-Protocol" class="headerlink" title="连接Agent与工具的“USB”：MCP (Multi-Capability Protocol)"></a>连接Agent与工具的“USB”：MCP (Multi-Capability Protocol)</h2><p>我们解决了AI模型和Agent的沟通问题，那么Agent又是怎么和它能使用的那些工具打交道的呢？</p><ul><li>  <strong>早期做法</strong>：Agent和它的工具们往往是写在同一个程序里的，直接调用函数就行。</li><li>  <strong>面临挑战</strong>：如果你有一个特别好用的工具（比如一个“浏览网页”的工具），很多不同的Agent都想用，总不能在每个Agent里都复制一份同样的代码吧？</li><li>  <strong>MCP的诞生</strong>：<strong>MCP (Multi-Capability Protocol，多能力协议)</strong> 就是为了解决这个问题。它有点像一个万能转接头，或者像文章里说的，“AI时代的USB协议”。</li><li><strong>角色分工</strong>：<ul><li>  **MCP客户端 (MCP Client)**：你的AI智能体。</li><li>  **MCP服务器 (MCP Server)**：提供工具的服务。</li></ul></li><li><strong>工作方式</strong>：<ol><li> MCP服务器负责托管各种工具。</li><li> MCP客户端（Agent）可以问服务器：“喂，你那里有啥工具啊？它们都能干啥？需要啥参数啊？”</li><li>MCP不光能调用那些“干活儿”的工具（比如函数），MCP服务器也可以直接提供：<ul><li>  **资源 (Resources)**：比如原始数据、文件。</li><li>  **提示词 (Prompts)**：为Agent提供现成的提示词模板。</li></ul></li><li> MCP服务器既可以和Agent跑在同一台电脑上，也可以部署在网络上，通过HTTP协议通信。</li></ol></li><li>  <strong>核心价值</strong>：MCP本身其实并不关心Agent用的是哪个AI模型。它只负责标准化Agent和工具服务之间的沟通方式。</li></ul><h2 id="完整流程：当女朋友说肚子疼……"><a href="#完整流程：当女朋友说肚子疼……" class="headerlink" title="完整流程：当女朋友说肚子疼……"></a>完整流程：当女朋友说肚子疼……</h2><p>让我们把所有这些概念串起来，看看它们是如何协同工作的：(Maybe I should add a flowchart here)</p><ol><li> **你 (用户)**：告诉你的 <strong>AI智能体</strong> (它同时也是一个 <strong>MCP客户端</strong>) 你的问题：“我女朋友肚子疼，怎么办？” (这是 <strong>用户提示词</strong>)</li><li> **AI智能体 (MCP客户端)**：通过 <strong>MCP协议</strong>，从某个 <strong>MCP服务器</strong> 那里获取所有可用的 <strong>智能体工具</strong> 及其描述信息。</li><li><strong>AI智能体处理工具信息</strong>：把这些工具信息，要么：<ul><li>  精心构造成一个 <strong>系统提示词</strong> 给AI模型，要么</li><li>  转换成 <strong>函数调用</strong> 所要求的格式。</li></ul></li><li> <strong>AI智能体与AI模型沟通</strong>：它把你的 <strong>用户提示词</strong> (以及系统提示词或函数调用信息) 一起打包发给AI模型。</li><li> <strong>AI模型思考与决策</strong>：AI模型一看，“哦，肚子疼啊……我应该上网搜搜看！” 于是，它通过 <strong>函数调用</strong> 的格式 (或者老一点的系统提示词方式) 告诉Agent：“请使用 <code>web_browse</code>（网页浏览）工具，搜索‘肚子疼的缓解方法’。”</li><li> <strong>AI智能体执行工具调用</strong>：Agent收到了这个指令。因为它是一个 <strong>MCP客户端</strong>，所以它就通过 <strong>MCP协议</strong> 去请求那个托管了 <code>web_browse</code> 工具的 <strong>MCP服务器</strong> 执行搜索操作。</li><li> <strong>MCP服务器上的工具执行</strong>：<code>web_browse</code> 工具接到指令，勤勤恳恳地上网搜索，然后把结果通过MCP协议返回给Agent。</li><li> <strong>结果反馈给AI模型</strong>：Agent再把这些搜索结果转发给AI模型。</li><li> <strong>AI模型生成最终答案</strong>：AI模型阅读了搜索结果，加上自己的“头脑风暴”，最终得出了一个充满智慧的答案：“让她多喝热水。”</li><li><strong>Agent将答案呈现给你</strong>。</li></ol><h2 id="结语：齿轮的协奏"><a href="#结语：齿轮的协奏" class="headerlink" title="结语：齿轮的协奏"></a>结语：齿轮的协奏</h2><p>所以你看，系统提示词、用户提示词、AI智能体、智能体工具、函数调用、MCP以及AI模型，它们之间并不是简单的取代关系，更像是精密配合的齿轮，一环扣一环，共同构建了AI自动化协作的完整体系。</p><p>AI的进步确实日新月异，有时候会让人感到焦虑。但换个角度看，这也是一个充满机遇的时代。我们不再只是被动地接受改变，而是有机会去理解、去参与、甚至去塑造这场变革。也许，一切就从了解一个小小的AI Agent开始。</p><p>希望这篇解释能帮你更好地理解这些AI核心概念！</p>]]></content>
+    
+    
+      
+      
+    <summary type="html">&lt;h1 id=&quot;AI核心概念漫谈：从聊天框到智能协作体系&quot;&gt;&lt;a href=&quot;#AI核心概念漫谈：从聊天框到智能协作体系&quot; class=&quot;headerlink&quot; title=&quot;AI核心概念漫谈：从聊天框到智能协作体系&quot;&gt;&lt;/a&gt;AI核心概念漫谈：从聊天框到智能协作体系&lt;/h1&gt;&lt;</summary>
+      
+    
+    
+    
+    
+    <category term="AI" scheme="http://example.com/tags/AI/"/>
+    
+    <category term="LLM" scheme="http://example.com/tags/LLM/"/>
+    
+    <category term="Tools" scheme="http://example.com/tags/Tools/"/>
+    
+  </entry>
   
   <entry>
     <title>Prompt Engineering Process</title>
@@ -34,9 +60,9 @@
     
     
     
-    <category term="Prompt Engineering" scheme="http://example.com/tags/Prompt-Engineering/"/>
-    
     <category term="LLM" scheme="http://example.com/tags/LLM/"/>
+    
+    <category term="Prompt Engineering" scheme="http://example.com/tags/Prompt-Engineering/"/>
     
   </entry>
   
@@ -82,9 +108,9 @@
     
     
     
-    <category term="Prompt Engineering" scheme="http://example.com/tags/Prompt-Engineering/"/>
-    
     <category term="LLM" scheme="http://example.com/tags/LLM/"/>
+    
+    <category term="Prompt Engineering" scheme="http://example.com/tags/Prompt-Engineering/"/>
     
   </entry>
   
